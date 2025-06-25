@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .project-description {
+            background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #2563eb;
+        }
+
+        .project-description h2 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .project-description p {
+            color: #475569;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            color: #1e293b;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .app-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .app-section h2 {
+            color: #1e293b;
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-align: center;
+            position: relative;
+        }
+
+        .app-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            border-radius: 2px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #374151;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #2563eb;
+            transform: translateY(-5px);
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .transactions-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            padding: 20px;
+            font-weight: 600;
+        }
+
+        .table-content {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .transaction-item:hover {
+            background: #f8fafc;
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-type {
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .income {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .expense {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .transaction-amount {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .amount-positive {
+            color: #059669;
+        }
+
+        .amount-negative {
+            color: #dc2626;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+        }
+
+        .empty-state img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .footer {
+            background: #1e293b;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .footer h3 {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .github-link {
+            background: #333;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 10px;
+            display: inline-block;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .github-link:hover {
+            background: #555;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .transaction-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💰 Personal Finance Tracker</h1>
+            <p>Smart Budget Management & Expense Tracking System</p>
+        </div>
+
+        <div class="main-content">
+            <div class="project-description">
+                <h2>🎯 Project Overview</h2>
+                <p><strong>Personal Finance Tracker</strong> is a comprehensive web application designed to help individuals manage their personal finances effectively. This application provides powerful tools for tracking income, expenses, and analyzing spending patterns to achieve better financial health.</p>
+                <p>Built with modern web technologies, this application features real-time calculations, interactive charts, and intelligent categorization to give users complete control over their financial data. The responsive design ensures seamless experience across all devices.</p>
+                <p><strong>Key Benefits:</strong> Better budgeting, expense tracking, financial goal setting, and comprehensive financial analysis for personal and family use.</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <h3>Real-time Analytics</h3>
+                    <p>Advanced financial analytics with instant calculations, balance tracking, and spending pattern analysis</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🏷️</span>
+                    <h3>Smart Categorization</h3>
+                    <p>Intelligent expense categorization system for better organization and detailed financial insights</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📱</span>
+                    <h3>Mobile Responsive</h3>
+                    <p>Perfect performance on all devices - desktop, tablet, and mobile with intuitive touch interface</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔒</span>
+                    <h3>Secure & Private</h3>
+                    <p>All data stored locally in your browser - no server uploads, complete privacy protection</p>
+                </div>
+            </div>
+
+            <div class="app-section">
+                <h2>💳 Transaction Manager</h2>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="description">Description:</label>
+                        <input type="text" id="description" placeholder="e.g., Grocery shopping, Salary, Coffee">
+                    </div>
+                    <div class="form-group">
+                        <label for="amount">Amount (IDR):</label>
+                        <input type="number" id="amount" placeholder="Enter amount" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Transaction Type:</label>
+                        <select id="type">
+                            <option value="income">💰 Income</option>
+                            <option value="expense">💸 Expense</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select id="category">
+                            <option value="food">🍕 Food & Dining</option>
+                            <option value="transport">🚗 Transportation</option>
+                            <option value="shopping">🛍️ Shopping</option>
+                            <option value="entertainment">🎬 Entertainment</option>
+                            <option value="bills">📄 Bills & Utilities</option>
+                            <option value="education">📚 Education</option>
+                            <option value="health">🏥 Healthcare</option>
+                            <option value="salary">💼 Salary</option>
+                            <option value="business">🏢 Business</option>
+                            <option value="other">📌 Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="btn" onclick="addTransaction()">
+                        ➕ Add Transaction
+                    </button>
+                    <button class="btn btn-danger" onclick="clearAllData()">
+                        🗑️ Clear All Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="app-section">
+                <h2>📈 Financial Summary</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalIncome">Rp 0</div>
+                        <div class="stat-label">Total Income</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalExpense">Rp 0</div>
+                        <div class="stat-label">Total Expenses</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="balance">Rp 0</div>
+                        <div class="stat-label">Current Balance</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="transactionCount">0</div>
+                        <div class="stat-label">Transactions</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-section">
+                <div class="transactions-table">
+                    <div class="table-header">
+                        <h3>📋 Recent Transactions</h3>
+                    </div>
+                    <div class="table-content" id="transactionsList">
+                        <div class="empty-state">
+                            <div style="font-size: 4em; margin-bottom: 20px;">📊</div>
+                            <h3>No transactions yet</h3>
+                            <p>Start by adding your first income or expense transaction above!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>👨‍💻 Developer Information</h3>
+            <p><strong>Project Creator:</strong> [NAMA LENGKAP ANDA]</p>
+            <p><strong>Student ID (NIM):</strong> [NIM ANDA]</p>
+            <p><strong>Institution:</strong> AMIK Taruna Probolinggo</p>
+            <p><strong>Course:</strong> UAS Praktek - GitHub Project Development</p>
+            <p><strong>Technologies Used:</strong> HTML5, CSS3, JavaScript, Local Storage, Responsive Design</p>
+            <p><strong>Version:</strong> 1.0.0 | <strong>Last Updated:</strong> June 2025</p>
+            <a href="#" class="github-link">📂 View Source Code on GitHub</a>
+        </div>
+    </div>
+
+    <script>
+        // Finance Tracker Application
+        class FinanceTracker {
+            constructor() {
+                this.transactions = this.loadTransactions();
+                this.updateDisplay();
+            }
+
+            loadTransactions() {
+                const stored = localStorage.getItem('financeTransactions');
+                return stored ? JSON.parse(stored) : [];
+            }
+
+            saveTransactions() {
+                localStorage.setItem('financeTransactions', JSON.stringify(this.transactions));
+            }
+
+            addTransaction(description, amount, type, category) {
+                const transaction = {
+                    id: Date.now(),
+                    description: description.trim(),
+                    amount: parseFloat(amount),
+                    type: type,
+                    category: category,
+                    date: new Date().toLocaleDateString('id-ID', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    }),
+                    timestamp: new Date().toISOString()
+                };
+
+                this.transactions.unshift(transaction);
+                this.saveTransactions();
+                this.updateDisplay();
+                return transaction;
+            }
+
+            deleteTransaction(id) {
+                this.transactions = this.transactions.filter(t => t.id !== id);
+                this.saveTransactions();
+                this.updateDisplay();
+            }
+
+            clearAllTransactions() {
+                this.transactions = [];
+                this.saveTransactions();
+                this.updateDisplay();
+            }
+
+            calculateStats() {
+                const income = this.transactions
+                    .filter(t => t.type === 'income')
+                    .reduce((sum, t) => sum + t.amount, 0);
+
+                const expenses = this.transactions
+                    .filter(t => t.type === 'expense')
+                    .reduce((sum, t) => sum + t.amount, 0);
+
+                return {
+                    totalIncome: income,
+                    totalExpenses: expenses,
+                    balance: income - expenses,
+                    transactionCount: this.transactions.length
+                };
+            }
+
+            formatCurrency(amount) {
+                return new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR',
+                    minimumFractionDigits: 0
+                }).format(amount);
+            }
+
+            getCategoryIcon(category) {
+                const icons = {
+                    food: '🍕',
+                    transport: '🚗',
+                    shopping: '🛍️',
+                    entertainment: '🎬',
+                    bills: '📄',
+                    education: '📚',
+                    health: '🏥',
+                    salary: '💼',
+                    business: '🏢',
+                    other: '📌'
+                };
+                return icons[category] || '📌';
+            }
+
+            updateDisplay() {
+                const stats = this.calculateStats();
+
+                // Update stats
+                document.getElementById('totalIncome').textContent = this.formatCurrency(stats.totalIncome);
+                document.getElementById('totalExpense').textContent = this.formatCurrency(stats.totalExpenses);
+                document.getElementById('transactionCount').textContent = stats.transactionCount;
+
+                // Update balance with color
+                const balanceElement = document.getElementById('balance');
+                balanceElement.textContent = this.formatCurrency(stats.balance);
+                balanceElement.style.color = stats.balance >= 0 ? '#059669' : '#dc2626';
+
+                // Update transactions list
+                this.renderTransactions();
+            }
+
+            renderTransactions() {
+                const container = document.getElementById('transactionsList');
+                
+                if (this.transactions.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div style="font-size: 4em; margin-bottom: 20px;">📊</div>
+                            <h3>No transactions yet</h3>
+                            <p>Start by adding your first income or expense transaction above!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = this.transactions.map(transaction => `
+                    <div class="transaction-item">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 5px;">
+                                ${this.getCategoryIcon(transaction.category)} ${transaction.description}
+                            </div>
+                            <div style="color: #64748b; font-size: 0.9em;">
+                                ${transaction.date}
+                            </div>
+                        </div>
+                        <div>
+                            <span class="transaction-type ${transaction.type}">
+                                ${transaction.type === 'income' ? '💰 Income' : '💸 Expense'}
+                            </span>
+                        </div>
+                        <div class="transaction-amount ${transaction.type === 'income' ? 'amount-positive' : 'amount-negative'}">
+                            ${transaction.type === 'income' ? '+' : '-'}${this.formatCurrency(transaction.amount)}
+                        </div>
+                        <div>
+                            <button class="delete-btn" onclick="tracker.deleteTransaction(${transaction.id})" title="Delete transaction">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize the tracker
+        const tracker = new FinanceTracker();
+
+        // Global functions for UI interactions
+        function addTransaction() {
+            const description = document.getElementById('description').value;
+            const amount = document.getElementById('amount').value;
+            const type = document.getElementById('type').value;
+            const category = document.getElementById('category').value;
+
+            // Validation
+            if (!description.trim()) {
+                alert('Please enter a description for the transaction');
+                return;
+            }
+
+            if (!amount || parseFloat(amount) <= 0) {
+                alert('Please enter a valid amount greater than 0');
+                return;
+            }
+
+            // Add transaction
+            const transaction = tracker.addTransaction(description, amount, type, category);
+            
+            // Clear form
+            document.getElementById('description').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('type').value = 'income';
+            document.getElementById('category').value = 'food';
+
+            // Show success message
+            showNotification(`Transaction added: ${transaction.description}`, 'success');
+        }
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to delete ALL transactions? This action cannot be undone!')) {
+                tracker.clearAllTransactions();
+                showNotification('All transactions have been deleted', 'warning');
+            }
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${type === 'success' ? '#10b981' : '#f59e0b'};
+                color: white;
+                border-radius: 10px;
+                font-weight: 600;
+                z-index: 1000;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+
+            // Add CSS animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(notification);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+                style.remove();
+            }, 3000);
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                addTransaction();
+            }
+        });
+
+        // Add form submission on Enter key
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+                addTransaction();
+            }
+        });
+
+        // Welcome message
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                showNotification('Welcome to Personal Finance Tracker! 💰', 'success');
+            }, 1000);
+        });
+
+        // Add sample data for demonstration
+        function addSampleData() {
+            const sampleTransactions = [
+                { description: 'Monthly Salary', amount: 5000000, type: 'income', category: 'salary' },
+                { description: 'Grocery Shopping', amount: 250000, type: 'expense', category: 'food' },
+                { description: 'Gas Station', amount: 100000, type: 'expense', category: 'transport' },
+                { description: 'Freelance Project', amount: 1500000, type: 'income', category: 'business' },
+                { description: 'Movie Tickets', amount: 75000, type: 'expense', category: 'entertainment' }
+            ];
+
+            if (tracker.transactions.length === 0) {
+                setTimeout(() => {
+                    if (confirm('Would you like to add some sample transactions to see how the app works?')) {
+                        sampleTransactions.forEach(t => {
+                            tracker.addTransaction(t.description, t.amount, t.type, t.category);
+                        });
+                        showNotification('Sample data added successfully!', 'success');
+                    }
+                }, 2000);
+            }
+        }
+
+        // Call sample data function
+        addSampleData();
+    </script>
+</body>
+</html>
