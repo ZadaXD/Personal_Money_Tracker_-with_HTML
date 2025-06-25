@@ -11,7 +11,7 @@ A comprehensive web application designed to help individuals manage their person
 
 ## 🚀 Live Demo
 
-*[🌐 Try the Application](https://yourusername.github.io/personal-finance-tracker)*
+*[🌐 Try the Application](https://zadaxd.github.io/Personal_Money_Tracker_-with_HTML/)*
 
 ## 📋 Table of Contents
 
